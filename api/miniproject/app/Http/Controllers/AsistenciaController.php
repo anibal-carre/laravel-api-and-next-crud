@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AsistenciaRequest;
+use App\Models\Alumno;
 use App\Models\Asistencia;
-
+use App\Models\Curso;
 
 class AsistenciaController extends Controller
 {
@@ -16,6 +17,14 @@ class AsistenciaController extends Controller
     }
     public function registrarAsistencia(AsistenciaRequest $request)
     {
+
+        $alumno = Alumno::where('nombre', $request->alumno_nombre)->first();
+        $curso = Curso::where('nombre', $request->curso_nombre)->first();
+
+        if ($alumno && $curso) {
+        } else {
+            return response()->json(['message' => 'Alumno o curso no encontrado'], 404);
+        }
         $asistencia = new Asistencia([
             'alumno_id' => $request->input('alumno_id'),
             'curso_id' => $request->input('curso_id'),

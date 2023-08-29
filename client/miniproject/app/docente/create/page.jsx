@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 
-const Create = () => {
+const CreateDocente = () => {
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
+
   const [correo, setCorreo] = useState("");
   const router = useRouter();
 
@@ -14,16 +14,15 @@ const Create = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/alumnos", {
+      const response = await axios.post("http://127.0.0.1:8000/api/docentes", {
         nombre,
-        apellido,
         correo,
       });
 
-      console.log("Alumno creado:", response.data);
-      router.push("/alumno");
+      console.log("Docente creado:", response.data);
+      router.push("/docente");
     } catch (error) {
-      console.error("Error creando alumno:", error);
+      console.error("Error creando docente:", error);
     }
   }
   return (
@@ -31,13 +30,13 @@ const Create = () => {
       <button className="self-start ml-5 mt-4">
         <BiArrowBack
           onClick={() => {
-            router.push("/alumno");
+            router.push("/docente");
           }}
           className="text-zinc-500 text-lg"
         />
       </button>
       <h1 className="text-2xl text-zinc-600 font-bold mt-10 mb-10">
-        Crear Alumno
+        Crear Docente
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -55,18 +54,7 @@ const Create = () => {
             value={nombre}
           />
         </div>
-        <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
-          <label className="font-semibold text-zinc-600" htmlFor="apellido">
-            Apellido:
-          </label>
-          <input
-            className="w-full border h-12 rounded-sm p-2"
-            type="text"
-            placeholder="Ingrese el apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
-          />
-        </div>
+
         <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
           <label className="font-semibold text-zinc-600" htmlFor="correo">
             Correo:
@@ -90,4 +78,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default CreateDocente;

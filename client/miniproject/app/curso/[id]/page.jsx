@@ -1,93 +1,108 @@
 "use client";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import axios from "axios";
 import { BiArrowBack } from "react-icons/bi";
 
-const Create = () => {
+const EditPageCurso = ({ params }) => {
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [correo, setCorreo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
   const router = useRouter();
 
-  async function handleSubmit(event) {
+  const id = params.id;
+
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/cursos/${id}`)
+      .then((response) => {
+        const data = response.data;
+        setNombre(data.nombre);
+        setDescripcion(data.descripcion);
+      })
+      .catch((error) => console.error(error));
+  }, [id]);
+
+  const handleCursoChange = (event) => {
+    setNombre(event.target.value);
+  };
+
+  const handleDescripcionChange = (event) => {
+    setDescripcion(event.target.value);
+  };
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/alumnos", {
-        nombre,
-        apellido,
-        correo,
-      });
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/cursos/${id}`,
+        {
+          nombre,
+          descripcion,
+        }
+      );
 
-      console.log("Alumno creado:", response.data);
-      router.push("/alumno");
+      if (response.status === 200) {
+        router.push("/curso");
+      } else {
+        console.error("Error al actualizar los datos del curso");
+      }
     } catch (error) {
-      console.error("Error creando alumno:", error);
+      console.error(error);
     }
-  }
+  };
+
   return (
     <div className="w-screen h-screen flex flex-col items-center ">
       <button className="self-start ml-5 mt-4">
         <BiArrowBack
           onClick={() => {
-            router.push("/alumno");
+            router.push("/curso");
           }}
           className="text-zinc-500 text-lg"
         />
       </button>
       <h1 className="text-2xl text-zinc-600 font-bold mt-10 mb-10">
-        Crear Alumno
+        Editar Curso
       </h1>
       <form
-        onSubmit={handleSubmit}
         className="w-[500px] h-[500px] flex flex-col items-center border p-10 shadow-sm shadow-black"
+        onSubmit={handleSubmit}
       >
         <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
           <label className="font-semibold text-zinc-600" htmlFor="nombre">
-            Nombre:
+            Nombre del Curso
           </label>
           <input
             className="w-full border h-12 rounded-sm p-2"
             type="text"
-            placeholder="Ingrese el nombre"
-            onChange={(e) => setNombre(e.target.value)}
+            id="curso"
             value={nombre}
+            onChange={handleCursoChange}
           />
         </div>
         <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
           <label className="font-semibold text-zinc-600" htmlFor="apellido">
-            Apellido:
+            Descripción
           </label>
           <input
             className="w-full border h-12 rounded-sm p-2"
             type="text"
-            placeholder="Ingrese el apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
+            id="descripcion"
+            value={descripcion}
+            onChange={handleDescripcionChange}
           />
         </div>
-        <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
-          <label className="font-semibold text-zinc-600" htmlFor="correo">
-            Correo:
-          </label>
-          <input
-            className="w-full border h-12 rounded-sm p-2"
-            type="email"
-            placeholder="Ingrese el correo"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-          />
-        </div>
+
         <button
           className="bg-blue-950 text-white font-semibold px-4 py-2 rounded-md self-end mt-10"
           type="submit"
         >
-          Crear
+          Guardar Cambios
         </button>
       </form>
     </div>
   );
 };
 
-export default Create;
+export default EditPageCurso;

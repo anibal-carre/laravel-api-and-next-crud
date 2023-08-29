@@ -15,8 +15,14 @@ class MatriculaController extends Controller
         $matriculas = Matricula::with('alumno', 'curso')->get();
         return response()->json($matriculas);
     }
-    public function matricularAlumno(Alumno $alumno, Curso $curso)
+    public function matricularAlumno(Alumno $alumno_nombre, Curso $curso_nombre)
     {
+        $alumno = Alumno::where('nombre', $alumno_nombre)->first();
+        $curso = Curso::where('nombre', $curso_nombre)->first();
+
+        if (!$alumno || !$curso) {
+            return response()->json(['message' => 'Alumno o curso no encontrado'], 404);
+        }
         $matricula = new Matricula([
             'alumno_id' => $alumno->id,
             'curso_id' => $curso->id,

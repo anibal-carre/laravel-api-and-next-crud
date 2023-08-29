@@ -10,7 +10,7 @@ const Docente = () => {
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchAlumnos() {
+    async function fetchDocentes() {
       try {
         const response = await axios.get("http://127.0.0.1:8000/api/docentes");
         setDocentes(response.data);
@@ -19,8 +19,21 @@ const Docente = () => {
       }
     }
 
-    fetchAlumnos();
+    fetchDocentes();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/docentes/${id}`);
+      setDocentes((prevDocentes) =>
+        prevDocentes.filter((docente) => docente.id !== id)
+      );
+    } catch (error) {
+      console.error("Error deleting alumno:", error);
+    }
+  };
+
+  let contador = 1;
   return (
     <div className="w-screen h-screen flex justify-center">
       <div className="w-[90%] h-[600px] flex flex-col justify-center items-center gap-8">
@@ -41,7 +54,7 @@ const Docente = () => {
             <thead className="bg-blue-950 text-gray-200 uppercase text-sm leading-normal">
               <tr>
                 <th className="py-3 px-6 text-left">#</th>
-                <th className="py-3 px-6 text-left">Alumno</th>
+                <th className="py-3 px-6 text-left">Docente</th>
                 <th className="py-3 px-6 text-left">Correo</th>
                 <th className="py-3 px-6 text-left">Acciones</th>
               </tr>
@@ -51,15 +64,20 @@ const Docente = () => {
                 <tr
                   className="border-b border-gray-200 hover:bg-gray-100"
                   key={docente.id}
-                  onClick={() => router.push(`/alumno/${docente.id}`)}
                 >
-                  <td className="py-3 px-6 text-left">{docente.id}</td>
+                  <td className="py-3 px-6 text-left">{contador++}</td>
                   <td className="py-3 px-6 text-left">{docente.nombre}</td>
                   <td className="py-3 px-6 text-left">{docente.correo}</td>
                   <td className="py-3 px-6 text-left">
                     <div className="flex items-center gap-3">
-                      <TfiPencil className="text-blue-500 text-base cursor-pointer" />
-                      <MdDelete className="text-red-600 text-base cursor-pointer" />
+                      <TfiPencil
+                        className="text-blue-500 text-base cursor-pointer"
+                        onClick={() => router.push(`/docente/${docente.id}`)}
+                      />
+                      <MdDelete
+                        className="text-red-600 text-base cursor-pointer"
+                        onClick={() => handleDelete(docente.id)}
+                      />
                     </div>
                   </td>
                 </tr>

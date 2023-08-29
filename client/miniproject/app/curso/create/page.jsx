@@ -4,26 +4,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { BiArrowBack } from "react-icons/bi";
 
-const Create = () => {
+const CreateCurso = () => {
   const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [correo, setCorreo] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+
   const router = useRouter();
 
   async function handleSubmit(event) {
     event.preventDefault();
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/alumnos", {
+      const response = await axios.post("http://127.0.0.1:8000/api/cursos", {
         nombre,
-        apellido,
-        correo,
+        descripcion,
       });
 
-      console.log("Alumno creado:", response.data);
-      router.push("/alumno");
+      console.log("Curso creado:", response.data);
+      router.push("/curso");
     } catch (error) {
-      console.error("Error creando alumno:", error);
+      console.error("Error creando curso:", error);
     }
   }
   return (
@@ -31,13 +30,13 @@ const Create = () => {
       <button className="self-start ml-5 mt-4">
         <BiArrowBack
           onClick={() => {
-            router.push("/alumno");
+            router.push("/curso");
           }}
           className="text-zinc-500 text-lg"
         />
       </button>
       <h1 className="text-2xl text-zinc-600 font-bold mt-10 mb-10">
-        Crear Alumno
+        Crear Curso
       </h1>
       <form
         onSubmit={handleSubmit}
@@ -45,49 +44,38 @@ const Create = () => {
       >
         <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
           <label className="font-semibold text-zinc-600" htmlFor="nombre">
-            Nombre:
+            Nombre del curso
           </label>
           <input
             className="w-full border h-12 rounded-sm p-2"
             type="text"
-            placeholder="Ingrese el nombre"
+            placeholder="Ingrese el nombre del curso"
             onChange={(e) => setNombre(e.target.value)}
             value={nombre}
           />
         </div>
         <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
           <label className="font-semibold text-zinc-600" htmlFor="apellido">
-            Apellido:
+            Descripción
           </label>
           <input
             className="w-full border h-12 rounded-sm p-2"
             type="text"
-            placeholder="Ingrese el apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
+            placeholder="Ingrese la descripción del curso"
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
           />
         </div>
-        <div className="w-[90%] h-auto flex flex-col gap-2 mb-6">
-          <label className="font-semibold text-zinc-600" htmlFor="correo">
-            Correo:
-          </label>
-          <input
-            className="w-full border h-12 rounded-sm p-2"
-            type="email"
-            placeholder="Ingrese el correo"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}
-          />
-        </div>
+
         <button
           className="bg-blue-950 text-white font-semibold px-4 py-2 rounded-md self-end mt-10"
           type="submit"
         >
-          Crear
+          Crear curso
         </button>
       </form>
     </div>
   );
 };
 
-export default Create;
+export default CreateCurso;

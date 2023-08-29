@@ -17,7 +17,7 @@ Route::resource('cursos', CursoController::class);
 
 Route::prefix('matricula')->group(function () {
     Route::get('matriculas', [MatriculaController::class, 'index']);
-    Route::post('alumnos/{alumno}/curso/{curso}', [MatriculaController::class, 'matricularAlumno']);
+    Route::post('alumnos/{alumno_nombre}/curso/{curso_nombre}', [MatriculaController::class, 'matricularAlumno']);
 });
 /* Para registrar la maticula :
 POST http://127.0.0.1:8000/api/matricula/alumnos/{id_alumno}/curso/{id_curso}
